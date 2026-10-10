@@ -1,206 +1,468 @@
+"use client";
+
+
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
 import NavLinks from "./NavLinks";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 
-const Header = async () => {
 
+interface HeaderProps {
 
-  // Fetch Categories API
+    categories:any[];
 
-  const res = await fetch(
-    "https://openapi.programming-hero.com/api/bazardor/categories",
-    {
-      cache: "no-store",
-    }
-  );
+}
 
 
-  const categories = await res.json();
 
+const Header = ({
+    categories
+}:HeaderProps)=>{
 
 
-  const date = new Date().toLocaleDateString("bn-BD", {
-    dateStyle: "full",
-  });
 
+const {
+    user,
+    logout
+}=useAuth();
 
 
-  return (
 
-    <header className="bg-white border-b border-gray-200">
+const router = useRouter();
 
 
-      <div className="max-w-7xl mx-auto px-5">
 
+const date = new Date().toLocaleDateString("bn-BD",{
 
-        {/* =========================
-            Top Row
-        ========================== */}
+    dateStyle:"full"
 
-        <div className="
-          flex
-          items-center
-          justify-between
-          py-4
-        ">
+});
 
 
-          {/* Logo Section */}
 
-          <div className="
-            flex
-            items-center
-            gap-3
-          ">
 
 
-            {/* Logo Background */}
+return (
 
-            <div className="
-              bg-green-600
-              rounded-xl
-              w-12
-              h-12
-              flex
-              items-center
-              justify-center
-            ">
 
-              <Image
-                src="/logo-icon.png"
-                width={35}
-                height={35}
-                alt="Bazar Dor Logo"
-                priority
-              />
+<header className="
+bg-white
+border-b
+border-gray-200
+">
 
-            </div>
 
 
+<div className="
+max-w-7xl
+mx-auto
+px-5
+">
 
-            {/* Title + Date */}
 
-            <div>
 
 
-              <h1 className="
-                text-xl
-                font-bold
-                text-gray-900
-              ">
-                বাজার দর
-              </h1>
 
+{/* =========================
+        Top Header
+========================= */}
 
 
-              <p className="
-                text-xs
-                text-gray-500
-              ">
-                {date}
-              </p>
 
+<div className="
+flex
+items-center
+justify-between
+py-4
+">
 
-            </div>
 
 
-          </div>
 
 
 
+{/* Logo */}
 
 
-          {/* =========================
-              Authentication Buttons
-          ========================== */}
+<Link
 
+href="/"
 
-          <div className="
-            flex
-            items-center
-            gap-2
-          ">
+className="
+flex
+items-center
+gap-3
+"
 
+>
 
-            <Link href="/signin">
 
-              <button
-                className="
-                  btn
-                  btn-sm
-                  bg-green-600
-                  text-white
-                  border-none
-                  hover:bg-green-700
-                "
-              >
+<div className="
+bg-green-600
+rounded-xl
+w-12
+h-12
+flex
+items-center
+justify-center
+">
 
-                Sign In
 
-              </button>
+<Image
 
-            </Link>
+src="/logo-icon.png"
 
+width={35}
 
+height={35}
 
-            <Link href="/signup">
+alt="Bazar Dor Logo"
 
-              <button
-                className="
-                  btn
-                  btn-sm
-                  border-green-600
-                  text-green-600
-                  bg-white
-                  hover:bg-green-50
-                "
-              >
+/>
 
-                Sign Up
 
-              </button>
+</div>
 
-            </Link>
 
 
-          </div>
 
 
-        </div>
 
+<div>
 
 
+<h1 className="
+text-xl
+font-bold
+text-gray-900
+">
 
+বাজার দর
 
-        {/* =========================
-            Second Row - Category Menu
-        ========================== */}
+</h1>
 
 
-        <div className="
-          border-t
-          border-gray-100
-          py-3
-        ">
 
+<p className="
+text-xs
+text-gray-500
+">
 
-          <NavLinks categories={categories}/>
+{date}
 
+</p>
 
-        </div>
 
 
+</div>
 
-      </div>
 
 
-    </header>
+</Link>
 
-  );
 
-};
+
+
+
+
+
+
+
+{/* =========================
+        User / Auth Section
+========================= */}
+
+
+
+
+{
+
+user ? (
+
+
+
+<div className="
+flex
+items-center
+gap-4
+">
+
+
+
+
+
+{/* Clickable Profile */}
+
+
+<Link
+
+href="/profile"
+
+className="
+flex
+items-center
+gap-3
+px-3
+py-2
+rounded-lg
+hover:bg-gray-50
+transition
+"
+
+
+>
+
+
+
+<Image
+
+src={user.image}
+
+width={42}
+
+height={42}
+
+alt="Profile Image"
+
+className="
+rounded-full
+object-cover
+"
+
+/>
+
+
+
+
+
+
+<div className="
+hidden
+md:block
+">
+
+
+<p className="
+text-sm
+font-semibold
+text-gray-800
+">
+
+{user.name}
+
+</p>
+
+
+
+
+<p className="
+text-xs
+text-gray-500
+">
+
+{user.email}
+
+</p>
+
+
+
+
+</div>
+
+
+
+</Link>
+
+
+
+
+
+
+
+{/* Sign Out Button */}
+
+
+
+<button
+
+onClick={()=>{
+
+
+logout();
+
+
+router.push("/signin");
+
+
+}}
+
+
+className="
+border
+border-red-400
+text-red-500
+px-4
+py-2
+rounded-lg
+text-sm
+hover:bg-red-50
+transition
+"
+
+>
+
+
+Sign Out
+
+
+</button>
+
+
+
+
+
+
+</div>
+
+
+
+)
+
+:
+
+
+
+(
+
+
+
+<div className="
+flex
+items-center
+gap-2
+">
+
+
+<Link href="/signin">
+
+
+<button
+
+className="
+btn
+btn-sm
+bg-green-600
+text-white
+border-none
+hover:bg-green-700
+"
+
+>
+
+Sign In
+
+</button>
+
+
+</Link>
+
+
+
+
+
+
+<Link href="/signup">
+
+
+<button
+
+className="
+btn
+btn-sm
+border-green-600
+text-green-600
+bg-white
+hover:bg-green-50
+"
+
+>
+
+Sign Up
+
+</button>
+
+
+</Link>
+
+
+
+</div>
+
+
+
+)
+
+
+
+}
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{/* =========================
+        Category Navigation
+========================= */}
+
+
+
+<div className="
+border-t
+border-gray-100
+py-3
+">
+
+
+<NavLinks
+
+categories={categories}
+
+/>
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+</header>
+
+
+)
+
+
+}
+
 
 
 export default Header;

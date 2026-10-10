@@ -1,133 +1,121 @@
-import CategoryHero from "@/components/CategoryHero";
-import CategoryProducts from "@/components/CategoryProducts";
+import Marquee from "@/components/Marquee";
+import Banner from "@/components/Banner";
+import ProductSection from "@/components/ProductSection";
 
 
 interface Product {
 
-    id:number;
-    nameBn:string;
-    category:string;
-    categoryNameBn:string;
-    categoryIcon:string;
-    unit:string;
-    image:string;
-    today:number;
+id:number;
 
-    change:{
-        dir:string;
-        pct:number;
-    };
+nameBn:string;
+
+categoryNameBn:string;
+
+categoryIcon:string;
+
+image:string;
+
+unit:string;
+
+today:number;
+
+
+change:{
+    dir:string;
+    pct:number;
+};
 
 }
 
 
 
-const CategoryPage = async({
-
-    params
-
-}:{
-    params:Promise<{
-        slug:string
-    }>
-})=>{
+export default async function Home(){
 
 
-    const {slug}=await params;
+const res = await fetch(
+
+"https://openapi.programming-hero.com/api/bazardor/products",
+
+{
+cache:"no-store"
+}
+
+);
 
 
-
-    const res = await fetch(
-
-        `https://api-store-indol.vercel.app/api/bazardor/products?category=${slug}`,
-
-        {
-            cache:"no-store"
-        }
-
-    );
+const data = await res.json();
 
 
 
-    const data = await res.json();
+const products:Product[] = Array.isArray(data)
+? data
+: data.data || [];
 
 
 
-    console.log("API DATA:",data);
+
+const increasedProducts = products.filter(
+
+(item)=>item.change.dir==="up"
+
+);
 
 
 
-    const products:Product[] = Array.isArray(data)
-        ? data
-        : data.data || [];
+const decreasedProducts = products.filter(
 
+(item)=>item.change.dir==="down"
 
-
-    const categoryName =
-        products.length > 0
-        ? products[0].categoryNameBn
-        : "";
-
-
-
-    const categoryIcon =
-        products.length > 0
-        ? products[0].categoryIcon
-        : "🛒";
-
+);
 
 
 
 
 return (
 
-<main className="
-w-full
-bg-[#F4F8F2]
-min-h-screen
-">
+<main className="w-full">
 
 
-<div className="
-w-full
-px-6
-lg:px-16
-py-10
-">
+<Marquee/>
 
 
-<CategoryHero
+<Banner/>
 
-categoryName={categoryName}
 
-icon={categoryIcon}
 
-count={products.length}
+<ProductSection
+
+title="আজ দাম বেড়েছে"
+
+products={increasedProducts.slice(0,6)}
 
 />
 
 
 
-<CategoryProducts
 
-products={products}
+<ProductSection
 
-categoryName={categoryName}
+title="আজ দাম কমেছে"
+
+products={decreasedProducts.slice(0,6)}
 
 />
 
 
 
-</div>
+<ProductSection
+
+title="সব পণ্য"
+
+products={products.slice(0,18)}
+
+/>
+
 
 
 </main>
 
-
-)
-
+);
 
 }
-
-
-export default CategoryPage;
