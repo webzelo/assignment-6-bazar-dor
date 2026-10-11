@@ -1,11 +1,22 @@
-import React from 'react';
+export default function Loading(){
 
-const loading = () => {
-    return (
-        <div>
-            
-        </div>
-    );
-};
+return(
 
-export default loading;
+<div className="
+flex
+justify-center
+items-center
+h-screen
+">
+
+<span className="
+loading loading-spinner loading-lg
+">
+
+</span>
+
+</div>
+
+)
+
+}

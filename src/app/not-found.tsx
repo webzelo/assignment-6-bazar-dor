@@ -1,11 +1,19 @@
-import React from 'react';
+export default function NotFound(){
 
-const notFound = () => {
-    return (
-        <div>
-            
-        </div>
-    );
-};
+return(
 
-export default notFound;
+<div className="text-center py-20">
+
+<h1 className="text-4xl">
+404
+</h1>
+
+<p>
+Product not found
+</p>
+
+</div>
+
+)
+
+}
