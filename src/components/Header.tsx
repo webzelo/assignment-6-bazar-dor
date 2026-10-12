@@ -326,7 +326,7 @@ transition
 >
 
 
-Sign Out
+সাইন আউট
 
 
 </button>
@@ -373,7 +373,7 @@ hover:bg-green-700
 
 >
 
-Sign In
+সাইন ইন
 
 </button>
 
@@ -400,8 +400,8 @@ hover:bg-green-50
 "
 
 >
-
-Sign Up
+ 
+সাইন আপ
 
 </button>
 

@@ -16,7 +16,7 @@ const Banner = () => {
             max-w-7xl
             mx-auto
             mt-6
-            bg-[#F3F8F2]
+            bg-[#FFFFFF]
             rounded-3xl
             px-12
             py-10
@@ -107,6 +107,7 @@ const Banner = () => {
                         ⚖ সব পণ্য দেখুন
 
                     </button>
+
 
 
 
