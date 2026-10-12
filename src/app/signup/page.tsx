@@ -86,7 +86,17 @@ export default function SignupPage(){
 
     }
 
+    const handleGoogleSignIn = async () => {
+    const data = await authClient.signIn.social({
+    provider: "google",
+  });
+};
 
+    const handleGithubSignIn = async () => {
+    const data = await authClient.signIn.social({
+    provider: "github",
+  });
+}
 
 return (
 
@@ -424,7 +434,7 @@ gap-3
 
 
 
-<button
+<button onClick={handleGoogleSignIn}
 
 className="
 border
@@ -446,7 +456,7 @@ hover:bg-gray-50
 
 
 
-<button
+<button onClick={handleGithubSignIn}
 
 className="
 border

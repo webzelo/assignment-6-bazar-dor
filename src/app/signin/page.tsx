@@ -93,9 +93,13 @@ const handleGoogleSignIn = async () => {
     const data = await authClient.signIn.social({
     provider: "google",
   });
+};
+
+const handleGithubSignIn = async () => {
+    const data = await authClient.signIn.social({
+    provider: "github",
+  });
 }
-
-
 
 return (
 
@@ -393,7 +397,7 @@ hover:bg-gray-50
 
 
 
-<button
+<button onClick={handleGithubSignIn}
 
 className="
 border
