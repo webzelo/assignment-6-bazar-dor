@@ -1,7 +1,91 @@
+"use client";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
+
+
+interface SignupFormData {
+    name: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+}
+
 
 
 export default function SignupPage(){
+
+
+    const router = useRouter();
+
+
+
+    const onSubmit = async (
+        e: React.FormEvent<HTMLFormElement>
+    ) => {
+
+
+        e.preventDefault();
+
+
+
+        const formData = new FormData(e.currentTarget);
+
+
+
+        const user = Object.fromEntries(
+            formData.entries()
+        ) as SignupFormData;
+
+
+
+        if(user.password !== user.confirmPassword){
+
+            console.log("Password does not match");
+
+            return;
+
+        }
+
+
+
+        const { confirmPassword, ...signupData } = user;
+
+
+
+        const { data, error } = await authClient.signUp.email({
+
+            name: signupData.name,
+
+            email: signupData.email,
+
+            password: signupData.password,
+
+            callbackURL: "/"
+
+        });
+
+
+
+        if(data){
+
+            console.log(data);
+
+            router.push("/");
+
+        }
+
+
+
+        if(error){
+
+            console.log(error);
+
+        }
+
+    }
+
 
 
 return (
@@ -72,7 +156,7 @@ mb-8
 
 
 
-<form className="space-y-4">
+<form onSubmit={onSubmit} className="space-y-4">
 
 
 
@@ -92,6 +176,8 @@ mb-2
 
 
 <input
+
+name="name"
 
 type="text"
 
@@ -134,6 +220,8 @@ mb-2
 
 <input
 
+name="email"
+
 type="email"
 
 placeholder="আপনার ইমেইল"
@@ -175,6 +263,8 @@ mb-2
 
 <input
 
+name="password"
+
 type="password"
 
 placeholder="পাসওয়ার্ড লিখুন"
@@ -215,6 +305,8 @@ mb-2
 
 
 <input
+
+name="confirmPassword"
 
 type="password"
 

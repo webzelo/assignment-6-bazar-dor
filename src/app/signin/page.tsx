@@ -3,16 +3,20 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
+import { authClient } from "@/lib/auth-client";
+
+
+
+interface SigninFormData {
+
+    email:string;
+    password:string;
+
+}
 
 
 
 export default function SigninPage(){
-
-
-    const {
-        login
-    } = useAuth();
 
 
 
@@ -22,31 +26,74 @@ export default function SigninPage(){
 
 
 
-    const handleSignin = () => {
+    const handleSignin = async (
+        e: React.FormEvent<HTMLFormElement>
+    ) => {
 
 
-        // Temporary user data
-        // Later replace this with your API authentication
+        e.preventDefault();
 
-        login({
 
-            name:"Raisul",
 
-            email:"raisul@gmail.com",
+        const formData = new FormData(e.currentTarget);
 
-            image:"https://i.pravatar.cc/150?img=12"
+
+
+        const user = Object.fromEntries(
+            formData.entries()
+        ) as SigninFormData;
+
+
+
+
+
+        const {data,error} = await authClient.signIn.email({
+
+            email:user.email,
+
+            password:user.password,
+
+            callbackURL:"/"
 
         });
 
 
 
-        router.push("/");
+
+
+        if(data){
+
+
+            console.log(data);
+
+
+            router.push("/");
+
+
+        }
+
+
+
+
+
+        if(error){
+
+
+            console.log(error);
+
+
+        }
+
 
 
     };
 
 
-
+const handleGoogleSignIn = async () => {
+    const data = await authClient.signIn.social({
+    provider: "google",
+  });
+}
 
 
 
@@ -126,13 +173,7 @@ mb-8
 
 <form
 
-onSubmit={(e)=>{
-
-e.preventDefault();
-
-handleSignin();
-
-}}
+onSubmit={handleSignin}
 
 className="space-y-5"
 
@@ -160,6 +201,8 @@ mb-2
 
 
 <input
+
+name="email"
 
 type="email"
 
@@ -205,6 +248,8 @@ mb-2
 
 
 <input
+
+name="password"
 
 type="password"
 
@@ -326,7 +371,7 @@ gap-3
 
 
 
-<button
+<button onClick={handleGoogleSignIn}
 
 className="
 border

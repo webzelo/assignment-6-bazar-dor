@@ -1,9 +1,9 @@
+
 import type { Metadata } from "next";
 import { Noto_Serif_Bengali } from "next/font/google";
 import "./globals.css";
 
 import Header from "@/components/Header";
-import { AuthProvider } from "@/context/AuthContext";
 
 
 const notoSerifBengali = Noto_Serif_Bengali({
@@ -49,7 +49,9 @@ const res = await fetch(
 
 {
 
-cache:"no-store"
+next: {
+  revalidate:3600
+}
 
 }
 
@@ -91,7 +93,6 @@ text-gray-900
 
 
 
-<AuthProvider>
 
 
 
@@ -107,7 +108,7 @@ categories={categories}
 
 
 
-</AuthProvider>
+
 
 
 

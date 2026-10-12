@@ -4,8 +4,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import NavLinks from "./NavLinks";
-import { useAuth } from "@/context/AuthContext";
+import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 
 
@@ -24,9 +25,9 @@ const Header = ({
 
 
 const {
-    user,
-    logout
-}=useAuth();
+    data:session,
+    isPending
+}=authClient.useSession();
 
 
 
@@ -34,11 +35,48 @@ const router = useRouter();
 
 
 
-const date = new Date().toLocaleDateString("bn-BD",{
+const [date, setDate] = useState("");
 
-    dateStyle:"full"
+useEffect(() => {
 
-});
+    setDate(
+        new Date().toLocaleDateString("bn-BD", {
+            dateStyle:"full"
+        })
+    );
+
+}, []);
+
+
+
+
+
+const handleLogout = async()=>{
+
+
+    await authClient.signOut();
+
+
+    router.push("/signin");
+
+
+};
+
+
+
+
+
+if(isPending){
+
+    return null;
+
+}
+
+
+
+
+
+const user = session?.user;
 
 
 
@@ -62,12 +100,6 @@ px-5
 ">
 
 
-
-
-
-{/* =========================
-        Top Header
-========================= */}
 
 
 
@@ -170,10 +202,7 @@ text-gray-500
 
 
 
-{/* =========================
-        User / Auth Section
-========================= */}
-
+{/* User / Auth Section */}
 
 
 
@@ -191,9 +220,6 @@ gap-4
 
 
 
-
-
-{/* Clickable Profile */}
 
 
 <Link
@@ -218,7 +244,7 @@ transition
 
 <Image
 
-src={user.image}
+src={user.image || "/profile.png"}
 
 width={42}
 
@@ -281,23 +307,9 @@ text-gray-500
 
 
 
-{/* Sign Out Button */}
-
-
-
 <button
 
-onClick={()=>{
-
-
-logout();
-
-
-router.push("/signin");
-
-
-}}
-
+onClick={handleLogout}
 
 className="
 border
@@ -421,12 +433,6 @@ Sign Up
 
 
 
-
-
-
-{/* =========================
-        Category Navigation
-========================= */}
 
 
 

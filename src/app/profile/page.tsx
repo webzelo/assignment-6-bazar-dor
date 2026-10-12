@@ -2,27 +2,53 @@
 
 
 import Image from "next/image";
-import {useAuth} from "@/context/AuthContext";
-import {useRouter} from "next/navigation";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 
 
 export default function ProfilePage(){
 
 
-const {user}=useAuth();
 
-const router=useRouter();
+const {
+    data:session,
+    isPending
+}=authClient.useSession();
+
+
+
+const router = useRouter();
+
+
+
+
+
+if(isPending){
+
+    return null;
+
+}
+
+
+
+
+
+const user=session?.user;
+
+
 
 
 
 if(!user){
 
-router.push("/signin");
+    router.push("/signin");
 
-return null;
+    return null;
 
 }
+
+
 
 
 
@@ -93,7 +119,7 @@ gap-4
 
 <Image
 
-src={user.image}
+src={user.image || "/profile.png"}
 
 width={70}
 
