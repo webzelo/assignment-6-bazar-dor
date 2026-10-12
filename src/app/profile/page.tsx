@@ -1,14 +1,12 @@
 "use client";
 
-
 import Image from "next/image";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 
-
-export default function ProfilePage(){
-
+export default function ProfilePage() {
 
 
 const {
@@ -17,26 +15,21 @@ const {
 }=authClient.useSession();
 
 
-
 const router = useRouter();
 
 
+const [editing,setEditing] = useState(false);
+const [name,setName] = useState("");
 
 
 
 if(isPending){
-
     return null;
-
 }
 
 
 
-
-
 const user=session?.user;
-
-
 
 
 
@@ -48,6 +41,43 @@ if(!user){
 
 }
 
+
+
+const handleEdit = ()=>{
+
+    setName(user.name || "");
+    setEditing(true);
+
+};
+
+
+
+const handleSave = async()=>{
+
+
+    try{
+
+
+        await authClient.updateUser({
+
+            name:name
+
+        });
+
+
+        setEditing(false);
+
+        window.location.reload();
+
+
+    }catch(error){
+
+        console.log(error);
+
+    }
+
+
+};
 
 
 
@@ -74,9 +104,7 @@ text-3xl
 font-bold
 mb-2
 ">
-
 আমার প্রোফাইল
-
 </h1>
 
 
@@ -84,9 +112,7 @@ mb-2
 text-gray-500
 mb-8
 ">
-
 আপনার ব্যক্তিগত তথ্য আপডেট করুন
-
 </p>
 
 
@@ -167,6 +193,8 @@ text-gray-500
 
 <button
 
+onClick={editing ? handleSave : handleEdit}
+
 className="
 border
 border-red-400
@@ -178,7 +206,13 @@ py-2
 
 >
 
-প্রোফাইল পরিবর্তন
+{
+editing 
+?
+"সংরক্ষণ করুন"
+:
+"প্রোফাইল পরিবর্তন"
+}
 
 </button>
 
@@ -203,26 +237,34 @@ p-6
 font-bold
 mb-5
 ">
-
 তথ্য
-
 </h3>
 
 
 
 
 <label>
-
 নাম
-
 </label>
 
 
 <input
 
-value={user.name}
 
-readOnly
+value={
+editing 
+?
+name
+:
+user.name
+}
+
+
+onChange={(e)=>setName(e.target.value)}
+
+
+readOnly={!editing}
+
 
 className="
 w-full
@@ -240,9 +282,7 @@ mb-5
 
 
 <label>
-
 ইমেইল
-
 </label>
 
 
